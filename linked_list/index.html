@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+
+.node {
+	fill: white;
+	stroke: black;
+}
+
+</style>
+<body ng-app="myApp" ng-controller="myCtrl">
+
+	<script src="http://d3js.org/d3.v3.min.js"></script>
+	<script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
+	<script   src="https://code.jquery.com/jquery-3.1.0.min.js"   integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s="   crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
+
+	<div class="canvas">
+	</div>
+	
+	
+	<strong>[node 추가]</strong> idx : <input type="text" ng-model="add_idx"> value : <input type="text" ng-model="add_val"><button ng-click="add(add_idx, add_val)">추가</button><br>	
+	<strong>[node 제거]</strong> idx : <input type="text" ng-model="del_idx"><button ng-click="del(del_idx)" >제거</button><br>	
+	<strong>[node highlight]</strong> idx : <input type="text" ng-model="hl_idx"><button ng-click="highlight(hl_idx)" >하이라이트</button><br>	
+	<script src="linked_list.js"></script>
+	
+	<script>
+		var app = angular.module("myApp", []);
+		app.controller("myCtrl", function($scope) {
+			$scope.add = function(idx, val) {
+				add_node(parseInt(idx), parseInt(val));
+			};
+			$scope.del = function(idx) {
+				delete_node(parseInt(idx));
+			};
+			$scope.highlight = function(idx) {
+				highlight_node(parseInt(idx));
+			};
+		});
+	</script>
+
+</body>

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head></head>
+<body>
+<script src="http://d3js.org/d3.v4.min.js"></script>
+
+<script>
+	
+	var container;
+	var text;
+	var rect;
+	var rectWidth = 40;
+	var rectHeight = 40;
+	var padding = 10;
+
+
+	function onBind(scheduler) {
+		container = d3.select("#canvas")
+			.append("svg")
+			.attr("width",1000)
+			.attr("height",500)
+			.append("g");
+		var value = scheduler.getTarget('value').data;
+		var top = scheduler.getTarget('top').data;
+		
+
+		drawArray(value, top);
+	}
+
+	function onStep(scheduler) {
+		// console.log(scheduler.getLine());
+	}
+
+	function onChange(scheduler, info) {
+		
+	}
+
+
+	function highlight(idx) {
+		d3.select("#rectIdx"+idx)
+			.transition()
+			.attr("fill","#E99787")
+			.attr("opacity",0.8);
+
+		d3.select("#rectIdx"+i)
+			.transition()
+			.attr("opacity",0.5)
+			.delay(300);
+	}
+
+	function unhighlight(idx) {
+		d3.select("#rectIdx"+idx)
+		.transition()
+		.attr("fill","#EED8C9");
+	}
+
+
+	function drawArray(value, top) {
+		if( text !== undefined ){
+			text.remove().exit();
+			rect.remove().exit();
+		}
+		
+		var rectNum = 0;
+		var textNum = 0;
+
+		rect = container.selectAll("g.arr")
+				.data(value)
+				.enter()
+				.append("g")
+				.attr("transform", function(d,i){
+					return "translate(0,"+(100+(padding+rectHeight)*i)+")";
+				})
+				.selectAll("g.rect")
+				.data(function(d){return d;})
+				.enter().append("rect")
+				.attr("id",function(d, i){ return "rectIdx"+(rectNum++); }	)
+				.attr("x",function(d,i){return 100+(padding+rectWidth)*i;})
+				.attr("y",0)
+				.attr("fill",function(d){
+					if(d === 0 )
+						return "#81715E";
+					else return "#EED8C9";
+				})
+				.attr("width",rectWidth)
+				.attr("height",rectHeight)
+				.attr("rx",2)
+				.attr("ry",2)
+				.attr("opacity",0.5);
+				
+
+
+		text = container.selectAll("g.arr")
+				.data(value)
+				.enter()
+				.append("g")
+				.attr("transform", function(d,i){
+					return "translate(0,"+(100+(padding+rectHeight)*i + rectHeight/2)+")";
+				})
+				.selectAll("g.text")
+				.data(function(d){return d;})
+				.enter().append("text")
+				.text(function(d,i){return d;})
+				.attr("x",function(d,i){return 100+(padding+rectWidth)*i+rectWidth/3;})
+				.attr("y",0)
+				.attr("fill","black")
+				.attr("id","#textIdx"+(textNum++))
+				.attr("font-size","12px");
+		
+
+	}
+</script>
+</body>
+</html>

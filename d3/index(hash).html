@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+  <meta charset="utf-8">
+
+  <meta name="viewport" content="width=device-width">
+  <script src = "Library/d3.js"></script>
+  <script src = "Library/async.min.js"></script>
+  
+
+  <title></title>
+	
+</head>
+
+<body>
+	<!-- <button onclick="a.go()">click</button> -->
+  <div id = "section1"></div>
+  <div id = "section2">
+  	<form>
+  	   add: <input type="text" name="Key">
+       <input type="text" name="Data">
+  		<input type="button" value = "addKey", onclick="add(this.form); return false;">
+  		<br/>
+    </form>
+    <form>
+      find: <input type="text" name="Key">
+       <input type="text" name="Data">
+      <input type="button" value = "findKey", onclick="find(this.form); return false;">
+      <br/>
+
+    </form>
+  </div>
+
+  <script src="hash.js"></script> 
+
+</body>
+
+</html>
+

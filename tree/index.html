@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+	<link type="text/css" rel="stylesheet" href="style.css"/>
+    <script type="text/javascript" src="d3.js"></script>
+    <script type="text/javascript" src="d3.layout.js"></script>
+    <script src="angular.min.js"></script>
+    
+    <style type="text/css">
+
+
+.node circle {
+  fill: #fff;
+  stroke: #aaa;
+  stroke-width: 1.5px;
+}
+
+.node text {
+  font-size: 13px;
+}
+
+path.link {
+  fill: none;
+  stroke: #ccc;
+  stroke-width: 2px;
+}
+
+    </style>
+  </head>
+  <body ng-app="myApp" ng-controller="myCtrl">
+    <div id="body">
+    </div>
+	
+	<strong>[add node]</strong> par_id : <input type="text" ng-model="add_par_id"> idx : <input type="text" ng-model="add_idx"> val : <input type="text" ng-model="add_val"> <button ng-click="add_child(add_par_id, add_idx, add_val)">추가</button><br>
+	<strong>[delete node]</strong> id : <input type="text" ng-model="delete_id"> <button ng-click="delete_node(delete_id)">제거</button><br>
+	<strong>[canvas 크기 변경]</strong> width : <input type="text" ng-model="width"> height : <input type="text" ng-model="height"> <button ng-click="change_canvas_size(width, height)">변경</button>
+	
+	<script>
+		var app = angular.module("myApp", []);
+		app.controller("myCtrl", function($scope) {
+			$scope.add_child = function(par_id, idx, val) {
+				add_child(parseInt(par_id), parseInt(idx), parseInt(val));
+			};
+			$scope.delete_node = function(id) {
+				delete_node(parseInt(id));
+			};
+			$scope.change_canvas_size = function(w, h) {
+				change_canvas_size(parseInt(w), parseInt(h));
+			};
+		});
+		
+		
+		
+		
+	</script>
+
+	<script src="tree.js"></script>
+  </body>
+</html>

@@ -1,0 +1,176 @@
+<script src = ""></script>
+
+<script>
+	var container;
+	var rect;
+	var text;
+	var arrow1, arrow2;
+	var rectWidth = 40;
+	var rectHeight = 40;
+	var padding = 10;
+
+
+	function onBind(scheduler){
+		container = d3.select("body")
+					.append("svg")
+					.attr("width",1000)
+					.attr("height",500)
+					.append("g");
+
+		var value = scheduler.getTarget('queue').data;
+		var front = scheduler.getTarget('front').data;
+		var rear = scheduler.getTarget('rear').data;
+
+		drawQueue(value,front,rear);
+	}
+
+	function onStep(scheduler){
+
+	}
+
+	function onChange(scheduler, info){
+		var value = scheduler.getTarget('queue').data;
+
+		if(info['front']){
+			var front = info['front'].data;
+			var rear = info['rear'].data;
+
+			if( front > info['front'].before){
+				pop_animation(value,front,rear,function(){});
+			}
+			else if( rear > info['rear'].before){
+				push_animation(value,front,rear,function(){});
+			}
+		}
+		else{
+			var front = scheduler.getTarget('front').data;
+			var rear = scheduler.getTarget('rear').data;
+			drawQueue(value,front,rear);
+		}
+
+	}
+
+	function pop_animation(value, front, rear, done){
+		var duration = 500;
+		arrow1.transition()
+			.attr("transform","translate("+ (100+(padding+rectWidth)*front + rectWidth/3)+ ","+(rectHeight+100)+")");
+		arrow2.transition()
+			.attr("transform","translate("+ (100+(padding+rectWidth)*rear + rectWidth/3)+ ","+(rectHeight+100)+")");
+		drawQueue(value,front,rear);
+
+		setTimeout(function(){
+			done();
+		}, duration);
+	}
+
+	function push_animation(value, front, rear, done){
+
+		var duration = 500;
+		var newElem = container.append("g");
+
+		newElem.append("rect")
+			.attr("x",500)
+			.attr("y",100)
+			.attr("width",rectWidth)
+			.attr("height",rectHeight)
+			.attr("fill","#128277")
+			.attr("rx",2)
+			.attr("ry",2);
+
+		newElem.append("text")
+			.text(value[rear])
+			.attr("x",500 + rectWidth/3)
+			.attr("y",100+rectHeight/3*2)
+			.attr("fill","white");
+		
+		 var distance = -(500-(rectWidth+padding)*rear)+100;
+		 console.log(distance);
+		newElem.transition()
+			.attr("transform","translate("+distance+",0)")
+			.duration(duration)
+			.ease(d3.easePolyOut);
+
+		arrow1.transition()
+			.attr("transform","translate("+ (100+(padding+rectWidth)*front + rectWidth/3)+ ","+(rectHeight+100)+")");
+		arrow2.transition()
+			.attr("transform","translate("+ (100+(padding+rectWidth)*rear + rectWidth/3)+ ","+(rectHeight+100)+")");
+
+
+		setTimeout(function(){
+			newElem.remove().exit();
+			drawQueue();
+			done();
+		}, duration);
+
+	}
+
+	function drawQueue(value, front rear){
+		if( text !== undefined ){
+			text.remove().exit();
+			rect.remove().exit();
+			arrow1.remove().exit();
+			arrow2.remove().exit();
+		}
+
+		
+		rect = container
+				.selectAll("g.queue.rect")
+				.data(value.slice(0,rear))
+				.enter().append("rect")
+				.attr("id",function(d, i){ return "rectIdx"+ i; }	)
+				.attr("x",function(d,i){return 100+(padding+rectWidth)*i;})
+				.attr("y",100)
+				.attr("fill","#128277")
+				.attr("width",rectWidth)
+				.attr("height",rectHeight)
+				.attr("rx",2)
+				.attr("ry",2)
+				.attr("opacity",function(d,i){
+					if( i>= front && i<= rear)
+						return 1.0;
+					else return 0.2;
+				});
+				
+
+
+		text = container
+				.selectAll("g.queue.text")
+				.data(value.slice(0,rear))
+				.enter().append("text")
+				.text(function(d){return d;})
+				.attr("x",function(d,i){return 100+(padding+rectWidth)*i+rectWidth/3;})
+				.attr("y",100+rectHeight/3*2)
+				.attr("fill","white")
+				.attr("id",function(d,i){return "#textIdx"+ i;});
+
+
+		arrow1 = container.append("g");
+		arrow1.append("svg:path")
+		.attr("d","M0,10L5,4L10,10")
+		.attr("fill","black");
+
+		arrow1.append("text")
+		.text("front")
+		.attr("x",function(){return -rectWidth/3;})
+		.attr("y",30)
+		.attr("fill","black");
+		arrow1.attr("transform","translate("+ (100+(padding+rectWidth)*front + rectWidth/3)+","+(rectHeight+100)+")");
+
+
+		arrow2 = container.append("g");
+		arrow2.append("svg:path")
+		.attr("d","M0,10L5,4L10,10")
+		.attr("fill","black");
+		
+		arrow2.append("text")
+		.text("rear")
+		.attr("x",function(){return -rectWidth/4;})
+		.attr("y",30)
+		.attr("fill","black");
+
+		arrow2.attr("transform","translate("+ (100+(padding+rectWidth)*rear + rectWidth/3)+","+(rectHeight+100)+")");
+		
+
+	}
+
+</script>

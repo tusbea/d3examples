@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+
+body {
+  font: 15px sans-serif;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.bar {
+  fill: orange;
+}
+
+.bar:hover {
+  fill: orangered ;
+}
+
+.x.axis path {
+  display: none;
+}
+
+.d3-tip {
+  line-height: 1;
+  font-weight: bold;
+  padding: 12px;
+  background: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  border-radius: 2px;
+}
+
+/* Creates a small triangle extender for the tooltip */
+.d3-tip:after {
+  box-sizing: border-box;
+  display: inline;
+  font-size: 10px;
+  width: 100%;
+  line-height: 1;
+  color: rgba(0, 0, 0, 0.8);
+  content: "\25BC";
+  position: absolute;
+  text-align: center;
+}
+
+/* Style northward tooltips differently */
+.d3-tip.n:after {
+  margin: -1px 0 0 0;
+  top: 100%;
+  left: 0;
+}
+</style>
+<body ng-app="myApp" ng-controller="myCtrl">
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
+<script   src="https://code.jquery.com/jquery-3.1.0.min.js"   integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s="   crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
+
+<div id="canvas">
+</div>
+	
+<div>
+  <strong>[resize]</strong> size : <input type="text" ng-model="size"><button ng-click="resize(size)">resize</button><br>
+  <strong>[setData]</strong> idx : <input type="text" ng-model="idx"> value : <input type="text" ng-model="value"> <button ng-click="setData(idx, value)">set</button><br>
+	<strong>[swap]</strong> i : <input type="text" ng-model="i"> j : <input type="text" ng-model="j"> <button ng-click="swap(i, j)">swap</button><br>
+  <strong>[highlight]</strong> idx : <input type="text" ng-model="idx2"><button ng-click="highlight(idx2)">변경</button><br>
+	<strong>[canvas 크기 변경]</strong> width : <input type="text" ng-model="width"> height : <input type="text" ng-model="height"> <button ng-click="change_canvas_size(width, height)">변경</button>
+	
+	<script>
+		var app = angular.module("myApp", []);
+		app.controller("myCtrl", function($scope) {
+      $scope.resize = function (size) {
+        resize(parseInt(size));
+      };
+      $scope.setData = function (idx, value) {
+        setData(parseInt(idx), parseInt(value));
+      }
+			$scope.swap = function(i, j) {
+				swap(parseInt(i), parseInt(j));
+			};
+      $scope.highlight = function (idx) {
+        highlight(parseInt(idx));
+      };
+			$scope.change_canvas_size = function(w, h) {
+				change_canvas_size(parseInt(w), parseInt(h));
+			};
+		});
+	</script>
+</div>
+<script src="chart.js"></script>
+</body>
